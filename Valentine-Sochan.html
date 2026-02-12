@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>💕 Purr-fect Valentine for Sochan 😻</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5e1fd 0%, #d7f0ff 50%, #ffe4f9 100%);
+      color: #333;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 90%;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      color: #ff69b4;
+      text-shadow: 0 0 15px rgba(255,105,180,0.6);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.6rem;
+      color: #6a5acd;
+      margin-bottom: 40px;
+    }
+
+    .cat-img {
+      width: 220px;
+      height: auto;
+      margin: 20px auto;
+      border-radius: 30%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: transform 0.4s;
+    }
+
+    .cat-img:hover { transform: scale(1.1); }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-size: 1.8rem;
+      padding: 18px 50px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    #yesBtn {
+      background: #98fb98;
+      color: #006400;
+    }
+
+    #yesBtn:hover { transform: scale(1.15); background: #7cfc00; }
+
+    #noBtn {
+      background: #ff9999;
+      color: white;
+      position: relative;
+      min-width: 180px;
+    }
+
+    #noBtn:hover {
+      background: #ff6666;
+    }
+
+    /* Success screen */
+    #success {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #ff9ec1, #a7d8ff, #d5aaff);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      color: white;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    #success h1 {
+      font-size: 4.5rem;
+      color: white;
+      margin: 0;
+    }
+
+    .bouquet {
+      width: 280px;
+      height: auto;
+      margin: 30px 0;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 2.5rem;
+      animation: float 8s infinite linear;
+      opacity: 0.9;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-150px) rotate(720deg); }
+    }
+
+    /* Funny no texts */
+    .no-texts {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts" id="heartsContainer"></div>
+
+  <div class="container" id="main">
+    <img src="https://thumbs.dreamstime.com/b/cat-heart-eyes-love-sticker-ai-generated-image-424868843.jpg" 
+         alt="Cute blushing cat" class="cat-img" id="cat">
+
+    <h1>Hey Sochan 💕</h1>
+    <p class="subtitle">Will you be my Valentine forever? 😻🐾</p>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes! Of course! 🐱💖</button>
+      <button id="noBtn">No...</button>
+    </div>
+  </div>
+
+  <div id="success">
+    <h1>Happy Valentine's Day, honey! 💐😘</h1>
+    <img src="https://thumbs.dreamstime.com/b/close-up-blue-red-roses-positioned-together-accented-small-turquoise-flowers-possibly-gypsophila-feature-vivid-434761807.jpg" 
+         alt="Bouquet of red roses and blue tulips" class="bouquet">
+    <p style="font-size: 1.8rem; max-width: 700px; margin: 20px;">
+      Yayyy! I knew you'd say yes deep down 😏<br>
+      I love you so much, my favorite person in the whole world 💜✨
+    </p>
+  </div>
+
+  <!-- Cute romantic background music (royalty-free from Pixabay) -->
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2023/08/07/audio_8d9b0d3d8a.mp3" type="audio/mpeg">
+    <!-- Fallback note: if link breaks, search Pixabay for "Valentines LoFi" by Amaksi -->
+  </audio>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const main = document.getElementById('main');
+    const success = document.getElementById('success');
+    const cat = document.getElementById('cat');
+    const music = document.getElementById('bgMusic');
+
+    const noResponses = [
+      "Seriously?, fuck u 😤",
+      "Oh come on, it's not gonna work 🙄",
+      "No wayyy... or is it? 🫣",
+      "Hmph... try harder 😼",
+      "You think you can catch me? 😏",
+      "Pwease nooo... wait YES!! 🥺💕"
+    ];
+
+    let clickCount = 0;
+
+    // Music auto-play (may need user interaction first on mobile)
+    document.body.addEventListener('click', () => {
+      music.volume = 0.3;
+      music.play().catch(() => console.log("Autoplay blocked - click again"));
+    }, { once: true });
+
+    // No button escape logic
+    noBtn.addEventListener('mouseover', chase);
+    noBtn.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount < noResponses.length) {
+        noBtn.textContent = noResponses[clickCount];
+      } else {
+        noBtn.style.opacity = '0';
+        noBtn.style.pointerEvents = 'none';
+        triggerSuccess();
+      }
+      chase(); // Run away on click too
+    });
+
+    function chase() {
+      const maxX = window.innerWidth - noBtn.offsetWidth - 40;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 40;
+
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
+
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = newX + 'px';
+      noBtn.style.top = newY + 'px';
+      noBtn.style.transform = `rotate(${Math.random()*20 - 10}deg)`;
+    }
+
+    yesBtn.addEventListener('click', triggerSuccess);
+
+    function triggerSuccess() {
+      main.style.display = 'none';
+      success.style.display = 'flex';
+      createHearts(30);
+      music.play();
+    }
+
+    function createHearts(count) {
+      const container = document.getElementById('heartsContainer');
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '💗';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (5 + Math.random() * 6) + 's';
+        heart.style.animationDelay = Math.random() * 3 + 's';
+        container.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 15000);
+      }
+    }
+
+    // Initial hearts
+    createHearts(12);
+  </script>
+</body>
+  </html>
