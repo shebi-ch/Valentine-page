@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Day The World Stopped</title>
+
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:linear-gradient(to top,#050510,#000000);
+font-family:'Segoe UI',sans-serif;
+color:white;
+text-align:center;
+}
+
+/* Stars */
+.star{
+position:absolute;
+width:2px;height:2px;
+background:white;
+animation:moveStar linear infinite;
+}
+@keyframes moveStar{
+from{transform:translateY(0);}
+to{transform:translateY(-100vh);}
+}
+.frozen .star{animation:none;}
+
+/* Cars lights */
+.car{
+position:absolute;
+width:60px;height:3px;
+background:linear-gradient(to right,transparent,red);
+animation:moveCar 8s linear infinite;
+}
+@keyframes moveCar{
+from{left:-100px;}
+to{left:100vw;}
+}
+.frozen .car{animation:none;}
+
+/* Clock */
+#clock{
+position:absolute;
+top:20px;right:30px;
+font-size:20px;
+}
+
+/* Center content */
+.center{
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+}
+
+/* Buttons */
+button{
+padding:12px 25px;
+border:none;
+border-radius:25px;
+margin:10px;
+font-size:16px;
+cursor:pointer;
+}
+.yes{background:#ff2e63;color:white;}
+.no{background:white;color:black;position:relative;}
+.glowBtn{
+background:#ff2e63;
+box-shadow:0 0 20px pink;
+color:white;
+}
+
+/* Overlay */
+#overlay{
+position:absolute;
+width:100%;height:100%;
+background:black;
+opacity:0;
+transition:1.5s;
+pointer-events:none;
+}
+.showOverlay{opacity:0.7;}
+
+/* Spotlight */
+#spotlight{
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+width:300px;height:300px;
+border-radius:50%;
+background:radial-gradient(circle,rgba(255,255,255,0.3),transparent);
+opacity:0;
+transition:2s;
+}
+.showSpotlight{opacity:1;}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+color:pink;
+font-size:20px;
+animation:float 5s linear forwards;
+}
+@keyframes float{
+from{transform:translateY(0);opacity:1;}
+to{transform:translateY(-200px);opacity:0;}
+}
+
+/* Wo ai ni animation */
+#woaini{
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%) scale(0);
+font-size:60px;
+color:pink;
+opacity:0;
+}
+.showWo{
+animation:wo 3s forwards;
+}
+@keyframes wo{
+0%{transform:translate(-50%,-50%) scale(0);opacity:0;}
+50%{transform:translate(-50%,-50%) scale(1.5);opacity:1;}
+100%{transform:translate(-50%,-50%) scale(0.5);opacity:0;}
+}
+
+.pinkGlow{
+background:linear-gradient(to top,#3a001f,#000);
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" autoplay loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div id="clock"></div>
+<div id="overlay"></div>
+<div id="spotlight"></div>
+<div id="woaini">Wo ai ni ❤️</div>
+
+<div class="center" id="scene1">
+<h2 id="intro"></h2>
+<button class="glowBtn" onclick="startChoice()">Would you be my valentine?</button>
+<div id="choiceButtons" style="display:none;">
+<button class="yes" onclick="freezeWorld()">Yes</button>
+<button class="no" id="noBtn">No</button>
+</div>
+</div>
+
+<script>
+
+/* Stars */
+for(let i=0;i<120;i++){
+let star=document.createElement("div");
+star.className="star";
+star.style.left=Math.random()*100+"vw";
+star.style.top=Math.random()*100+"vh";
+star.style.animationDuration=(5+Math.random()*5)+"s";
+document.body.appendChild(star);
+}
+
+/* Cars */
+for(let i=0;i<5;i++){
+let car=document.createElement("div");
+car.className="car";
+car.style.top=(70+i*5)+"%";
+document.body.appendChild(car);
+}
+
+/* Clock */
+function updateClock(){
+let now=new Date();
+document.getElementById("clock").innerText=now.toLocaleTimeString();
+}
+setInterval(updateClock,1000);
+updateClock();
+
+/* Typing intro */
+let text=`February 14th…
+O souls of love
+Be my witness`;
+let i=0;
+function typeIntro(){
+if(i<text.length){
+document.getElementById("intro").innerHTML+=text.charAt(i);
+i++;
+setTimeout(typeIntro,60);
+}
+}
+typeIntro();
+
+/* Show Yes/No */
+function startChoice(){
+document.getElementById("choiceButtons").style.display="block";
+}
+
+/* No button runs */
+let noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",()=>{
+noBtn.style.position="absolute";
+noBtn.style.left=Math.random()*80+"vw";
+noBtn.style.top=Math.random()*80+"vh";
+});
+
+/* Freeze world */
+function freezeWorld(){
+document.body.classList.add("frozen");
+document.getElementById("overlay").classList.add("showOverlay");
+document.getElementById("bgMusic").volume=0.2;
+document.getElementById("spotlight").classList.add("showSpotlight");
+
+setTimeout(showValentine,2000);
+}
+
+/* Valentine scene */
+function showValentine(){
+document.getElementById("intro").innerHTML="💐 Happy Valentine's Day Sochan 💐";
+
+startHearts();
+
+setTimeout(()=>{
+document.getElementById("intro").innerHTML+=
+"<br><br>If I have many lifetimes<br>I would choose you.<br>Every. Single. Time.";
+showFinalButton();
+},3000);
+}
+
+/* Floating hearts */
+function startHearts(){
+setInterval(()=>{
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.top="70%";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),5000);
+},300);
+}
+
+/* Final button */
+function showFinalButton(){
+let btn=document.createElement("button");
+btn.innerText="Would you be mine Forever?";
+btn.className="yes";
+btn.onclick=finalYes;
+document.getElementById("scene1").appendChild(btn);
+}
+
+/* Final YES */
+function finalYes(){
+document.body.classList.add("pinkGlow");
+document.getElementById("overlay").classList.remove("showOverlay");
+document.getElementById("bgMusic").volume=1;
+
+let wo=document.getElementById("woaini");
+wo.classList.add("showWo");
+
+setTimeout(()=>{
+location.reload();
+},6000);
+}
+
+</script>
+
+</body>
+  </html>
